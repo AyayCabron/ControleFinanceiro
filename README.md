@@ -1,47 +1,38 @@
-💰 ControleFinanceiro
+# 💰 ControleFinanceiro
 
 Uma aplicação web simples para controle de receitas e despesas pessoais, desenvolvida como um SPA (Single Page Application) utilizando HTML, CSS e JavaScript puro.
 
-📌 Funcionalidades
+---
 
-Registro de Transações: Adicione receitas e despesas com nome e valor.
+## 📌 Funcionalidades
 
-Saldo Atualizado: O saldo é automaticamente ajustado conforme as transações.
+- **Registro de Transações**: Adicione receitas e despesas com nome e valor.
+- **Saldo Atualizado**: O saldo é automaticamente ajustado conforme as transações.
+- **Listagem de Transações**: Visualize todas as transações registradas.
+- **Armazenamento Local**: Os dados são salvos no `localStorage` do navegador.
+- **Modo Claro/Escuro**: Alternância entre temas claro e escuro.
 
-Listagem de Transações: Visualize todas as transações registradas.
+---
 
-Armazenamento Local: Os dados são salvos no localStorage do navegador, garantindo persistência mesmo após recarregamentos.
+## 🛠️ Tecnologias Utilizadas
 
-Modo Claro/Escuro: Alternância entre temas claro e escuro para melhor usabilidade.
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Armazenamento**: localStorage
+- **Estilos**: CSS personalizado
 
-🛠️ Tecnologias Utilizadas
+---
 
-Frontend: HTML5, CSS3, JavaScript
+## 🚀 Como Rodar o Projeto
 
-Armazenamento: localStorage
+1. Clone este repositório:
 
-Estilos: CSS personalizado
-
-🚀 Como Rodar o Projeto
-
-Clone este repositório:
-
-git clone https://github.com/AyayCabron/ControleFinanceiro.git
-
-
-Abra o arquivo index.html em seu navegador preferido.
+   ```bash
+   git clone https://github.com/AyayCabron/ControleFinanceiro.git
+Abra o arquivo index.html em seu navegador.
 
 📸 Capturas de Tela
-
-Tela Inicial: Interface limpa para inserção de transações.
-
-
-Lista de Transações: Visualização das transações registradas com saldo atualizado.
-
-Tema Claro/Escuro: Alternância de temas para melhor experiência do usuário.
-
+<p align="center"> <img src="Captura de tela 2025-09-25 001447.png" width="600" alt="Tela Inicial"> </p> <p align="center"> <img src="Captura de tela 2025-09-25 001216.png" width="600" alt="Lista de Transações"> </p>
 🤝 Como Contribuir
-
 Faça um fork deste repositório.
 
 Crie uma branch para sua feature (git checkout -b minha-feature).
@@ -55,6 +46,4 @@ Push para a branch (git push origin minha-feature).
 Abra um Pull Request para revisão.
 
 📄 Licença
-
-Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE
- para mais detalhes.
+Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para mais detalhes.
