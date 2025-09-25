@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanças Pessoais | Controle Completo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="container">
+
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-chart-line"></i> Controle Financeiro</h1>
+                <p>Gerencie suas receitas, despesas e benefícios em um só lugar</p>
+            </div>
+            <div class="user-actions">
+                <button id="theme-toggle" class="btn-icon" title="Alternar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <!--<button id="lista-toggle" class="btn-icon" title="Exibir lista completa">
+        <i class="fas fa-list"></i>
+    </button> -->
+            </div>
+            
+        </header>
+
+
+        <section class="dashboard">
+            <div class="card summary-card">
+                <div class="card-header">
+                    <h3>Saldo Disponível</h3>
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="card-body">
+                    <div class="amount" id="saldo-disponivel">R$ 0,00</div>
+                    <div class="trend neutral">
+                        <i class="fas fa-minus"></i>
+                        <span>Saldo inicial</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card income-card">
+                <div class="card-header">
+                    <h3>Receitas Totais</h3>
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="card-body">
+                    <div class="amount positive" id="receitas-totais">R$ 0,00</div>
+                    <div class="trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Sem receitas ainda</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card expenses-card">
+                <div class="card-header">
+                    <h3>Despesas Fixas</h3>
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="card-body">
+                    <div class="amount negative" id="despesas-fixas">R$ 0,00</div>
+                    <div class="trend negative">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>Sem despesas ainda</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card variable-card">
+                <div class="card-header">
+                    <h3>Despesas Variáveis</h3>
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="card-body">
+                    <div class="amount negative" id="despesas-variáveis">R$ 0,00</div>
+                    <div class="trend negative">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>Sem despesas ainda</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="quick-insert">
+            <div class="section-header">
+                <h2><i class="fas fa-bolt"></i> Inserção Rápida</h2>
+                <p>Adicione rapidamente despesas do dia a dia</p>
+            </div>
+            
+            <div class="quick-forms">
+                <div class="quick-form-card">
+                    <h3><i class="fas fa-credit-card"></i> Despesa Variável Rápida</h3>
+                    <form id="form-rapido-despesa-variavel" class="quick-form">
+                        <div class="form-group">
+                            <label for="descricao-rapida-despesa"><i class="fas fa-pen"></i> Descrição</label>
+                            <input type="text" id="descricao-rapida-despesa" placeholder="Ex: Uber para o trabalho" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="valor-rapido-despesa"><i class="fas fa-dollar-sign"></i> Valor (R$)</label>
+                                <input type="number" id="valor-rapido-despesa" step="0.01" min="0" placeholder="0,00" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="categoria-rapida-despesa"><i class="fas fa-tag"></i> Categoria</label>
+                                <select id="categoria-rapida-despesa">
+                                    <option value="alimentacao">Alimentação</option>
+                                    <option value="transporte">Transporte</option>
+                                    <option value="lazer">Lazer</option>
+                                    <option value="compras">Compras</option>
+                                    <option value="cartao">Cartão de Crédito</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="desconto-beneficio-rapido"><i class="fas fa-tags"></i> Descontar do Benefício</label>
+                            <select id="desconto-beneficio-rapido">
+                                <option value="">Não descontar</option>
+                                <option value="vale-alimentacao">Vale Alimentação</option>
+                                <option value="vale-transporte">Vale Transporte</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-danger btn-block">
+                            <i class="fas fa-plus"></i> Adicionar Despesa
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="quick-form-card">
+                    <h3><i class="fas fa-file-invoice-dollar"></i> Despesa Fixa Rápida</h3>
+                    <form id="form-rapido-despesa-fixa" class="quick-form">
+                        <div class="form-group">
+                            <label for="descricao-rapida-fixa"><i class="fas fa-pen"></i> Descrição</label>
+                            <input type="text" id="descricao-rapida-fixa" placeholder="Ex: Aluguel" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="valor-rapido-fixa"><i class="fas fa-dollar-sign"></i> Valor (R$)</label>
+                                <input type="number" id="valor-rapido-fixa" step="0.01" min="0" placeholder="0,00" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="categoria-rapida-fixa"><i class="fas fa-tags"></i> Categoria</label>
+                                <select id="categoria-rapida-fixa">
+                                    <option value="moradia">Moradia</option>
+                                    <option value="utilidades">Utilidades</option>
+                                    <option value="transporte">Transporte</option>
+                                    <option value="saude">Saúde</option>
+                                    <option value="educacao">Educação</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="vencimento-rapido-fixa"><i class="fas fa-calendar-day"></i> Próximo Vencimento</label>
+                            <input type="date" id="vencimento-rapido-fixa" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-danger btn-block">
+                            <i class="fas fa-plus"></i> Adicionar Despesa Fixa
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+
+        <div class="alert" id="alert-message"></div>
+
+
+        <nav class="tabs-nav">
+            <button class="tab-btn active" data-tab="receitas">
+                <i class="fas fa-plus-circle"></i>
+                <span>Receitas</span>
+            </button>
+            <button class="tab-btn" data-tab="despesas-fixas">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Despesas Fixas</span>
+            </button>
+            <button class="tab-btn" data-tab="despesas-variáveis">
+                <i class="fas fa-credit-card"></i>
+                <span>Despesas Variáveis</span>
+            </button>
+            <button class="tab-btn" data-tab="cartao-credito">
+                <i class="fas fa-credit-card"></i>
+                <span>Cartão de Crédito</span>
+            </button>
+            <button class="tab-btn" data-tab="beneficios">
+                <i class="fas fa-gift"></i>
+                <span>Benefícios</span>
+            </button>
+            <button class="tab-btn" data-tab="relatorios">
+                <i class="fas fa-chart-pie"></i>
+                <span>Relatórios</span>
+            </button>
+        </nav>
+
+
+        <main class="tab-content-container">
+
+            <section class="tab-content active" id="receitas">
+                <div class="content-header">
+                    <h2><i class="fas fa-plus-circle"></i> Cadastro de Receitas</h2>
+                    <p>Adicione suas receitas fixas (salário) e variáveis (freelance, vendas)</p>
+                </div>
+                
+                <form id="form-receita" class="data-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="descricao-receita"><i class="fas fa-pen"></i> Descrição</label>
+                            <input type="text" id="descricao-receita" placeholder="Ex: Salário Mensal" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="valor-receita"><i class="fas fa-dollar-sign"></i> Valor (R$)</label>
+                            <input type="number" id="valor-receita" step="0.01" min="0" placeholder="0,00" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tipo-receita"><i class="fas fa-tag"></i> Tipo</label>
+                            <select id="tipo-receita">
+                                <option value="fixa">Fixa (ex: salário)</option>
+                                <option value="variavel">Variável (ex: freelance)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="data-receita"><i class="fas fa-calendar"></i> Data</label>
+                            <input type="date" id="data-receita" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Adicionar Receita
+                    </button>
+                </form>
+                
+                <div class="table-container">
+                    <h3><i class="fas fa-list"></i> Lista de Receitas</h3>
+                    <div class="table-responsive">
+                        <table id="tabela-receitas">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Tipo</th>
+                                    <th>Data</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="tab-content" id="despesas-fixas">
+                <div class="content-header">
+                    <h2><i class="fas fa-file-invoice-dollar"></i> Cadastro de Despesas Fixas</h2>
+                    <p>Adicione suas despesas recorrentes como aluguel, contas e assinaturas</p>
+                </div>
+                
+                <form id="form-despesa-fixa" class="data-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="descricao-despesa-fixa"><i class="fas fa-pen"></i> Descrição</label>
+                            <input type="text" id="descricao-despesa-fixa" placeholder="Ex: Aluguel" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="valor-despesa-fixa"><i class="fas fa-dollar-sign"></i> Valor (R$)</label>
+                            <input type="number" id="valor-despesa-fixa" step="0.01" min="0" placeholder="0,00" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vencimento-despesa-fixa"><i class="fas fa-calendar-day"></i> Vencimento</label>
+                            <input type="date" id="vencimento-despesa-fixa" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria-despesa-fixa"><i class="fas fa-tags"></i> Categoria</label>
+                            <select id="categoria-despesa-fixa">
+                                <option value="moradia">Moradia (aluguel, condomínio)</option>
+                                <option value="utilidades">Utilidades (luz, água, internet)</option>
+                                <option value="transporte">Transporte</option>
+                                <option value="saude">Saúde</option>
+                                <option value="educacao">Educação</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-plus"></i> Adicionar Despesa Fixa
+                    </button>
+                </form>
+                
+                <div class="table-container">
+                    <h3><i class="fas fa-list"></i> Lista de Despesas Fixas</h3>
+                    <div class="table-responsive">
+                        <table id="tabela-despesas-fixas">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Vencimento</th>
+                                    <th>Categoria</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="tab-content" id="despesas-variáveis">
+                <div class="content-header">
+                    <h2><i class="fas fa-credit-card"></i> Cadastro de Despesas Variáveis</h2>
+                    <p>Registre gastos como alimentação, transporte, lazer e compras</p>
+                </div>
+                
+                <form id="form-despesa-variavel" class="data-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="descricao-despesa-variavel"><i class="fas fa-pen"></i> Descrição</label>
+                            <input type="text" id="descricao-despesa-variavel" placeholder="Ex: Jantar fora" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="valor-despesa-variavel"><i class="fas fa-dollar-sign"></i> Valor (R$)</label>
+                            <input type="number" id="valor-despesa-variavel" step="0.01" min="0" placeholder="0,00" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="data-despesa-variavel"><i class="fas fa-calendar"></i> Data</label>
+                            <input type="date" id="data-despesa-variavel" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria-despesa-variavel"><i class="fas fa-tags"></i> Categoria</label>
+                            <select id="categoria-despesa-variavel">
+                                <option value="alimentacao">Alimentação</option>
+                                <option value="transporte">Transporte (Uber, táxi)</option>
+                                <option value="lazer">Lazer (eventos, restaurantes)</option>
+                                <option value="compras">Compras</option>
+                                <option value="cartao">Cartão de Crédito</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="parcelas-despesa-variavel"><i class="fas fa-calendar-alt"></i> Parcelas</label>
+                            <input type="number" id="parcelas-despesa-variavel" min="1" value="1" placeholder="1">
+                            <small>Número de parcelas (se aplicável)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="desconto-beneficio"><i class="fas fa-tags"></i> Descontar do Benefício</label>
+                            <select id="desconto-beneficio">
+                                <option value="">Não descontar</option>
+                                <option value="vale-alimentacao">Vale Alimentação</option>
+                                <option value="vale-transporte">Vale Transporte</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-plus"></i> Adicionar Despesa Variável
+                    </button>
+                </form>
+                
+                <div class="table-container">
+                    <h3><i class="fas fa-list"></i> Lista de Despesas Variáveis</h3>
+                    <div class="table-responsive">
+                        <table id="tabela-despesas-variáveis">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Data</th>
+                                    <th>Categoria</th>
+                                    <th>Parcelas</th>
+                                    <th>Desconto</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="tab-content" id="cartao-credito">
+                <div class="content-header">
+                    <h2><i class="fas fa-credit-card"></i> Controle do Cartão de Crédito</h2>
+                    <p>Gerencie suas compras parceladas no cartão de crédito</p>
+                </div>
+                
+                <form id="form-cartao-credito" class="data-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="descricao-cartao"><i class="fas fa-pen"></i> Descrição</label>
+                            <input type="text" id="descricao-cartao" placeholder="Ex: Compra no Mercado" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="valor-cartao"><i class="fas fa-dollar-sign"></i> Valor Total (R$)</label>
+                            <input type="number" id="valor-cartao" step="0.01" min="0" placeholder="0,00" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="data-compra-cartao"><i class="fas fa-calendar"></i> Data da Compra</label>
+                            <input type="date" id="data-compra-cartao" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="parcelas-cartao"><i class="fas fa-calendar-alt"></i> Número de Parcelas</label>
+                            <input type="number" id="parcelas-cartao" min="1" value="1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="categoria-cartao"><i class="fas fa-tags"></i> Categoria</label>
+                            <select id="categoria-cartao">
+                                <option value="compras">Compras</option>
+                                <option value="alimentacao">Alimentação</option>
+                                <option value="lazer">Lazer</option>
+                                <option value="transporte">Transporte</option>
+                                <option value="saude">Saúde</option>
+                                <option value="educacao">Educação</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-plus"></i> Adicionar Compra no Cartão
+                    </button>
+                </form>
+                
+                <div class="table-container">
+                    <h3><i class="fas fa-list"></i> Compras no Cartão de Crédito</h3>
+                    <div class="table-responsive">
+                        <table id="tabela-cartao-credito">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor Total</th>
+                                    <th>Parcelas</th>
+                                    <th>Valor Parcela</th>
+                                    <th>Data Compra</th>
+                                    <th>Próximas Parcelas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <h3><i class="fas fa-calendar"></i> Próximas Parcelas</h3>
+                    <div class="table-responsive">
+                        <table id="tabela-proximas-parcelas">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor Parcela</th>
+                                    <th>Vencimento</th>
+                                    <th>Parcela</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="tab-content" id="beneficios">
+                <div class="content-header">
+                    <h2><i class="fas fa-gift"></i> Cadastro de Benefícios</h2>
+                    <p>Registre benefícios como vale-transporte e vale-alimentação</p>
+                </div>
+                
+                <form id="form-beneficio" class="data-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tipo-beneficio"><i class="fas fa-tag"></i> Tipo de Benefício</label>
+                            <select id="tipo-beneficio">
+                                <option value="vale-transporte">Vale Transporte</option>
+                                <option value="vale-alimentacao">Vale Alimentação</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="valor-beneficio"><i class="fas fa-dollar-sign"></i> Valor (R$)</label>
+                            <input type="number" id="valor-beneficio" step="0.01" min="0" placeholder="0,00" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="data-beneficio"><i class="fas fa-calendar"></i> Data de Recebimento</label>
+                            <input type="date" id="data-beneficio" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Adicionar Benefício
+                    </button>
+                </form>
+                
+                <div class="table-container">
+                    <h3><i class="fas fa-list"></i> Lista de Benefícios</h3>
+                    <div class="table-responsive">
+                        <table id="tabela-beneficios">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Valor</th>
+                                    <th>Data</th>
+                                    <th>Saldo Disponível</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="tab-content" id="relatorios">
+                <div class="content-header">
+                    <h2><i class="fas fa-chart-pie"></i> Relatórios e Análises</h2>
+                    <p>Visualize gráficos e relatórios sobre sua situação financeira</p>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>Distribuição de Despesas</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-despesas"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3>Evolução Mensal</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-evolucao"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>Comparativo Mensal</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-comparativo"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3>Utilização de Benefícios</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-beneficios"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reports-container">
+                    <div class="report-card">
+                        <h3>Resumo Financeiro Detalhado</h3>
+                        <div class="report-content" id="resumo-financeiro">
+                            <p>Adicione dados para visualizar o resumo financeiro</p>
+                        </div>
+                    </div>
+
+                    <div class="report-card">
+                        <h3>Análise de Tendências</h3>
+                        <div class="report-content" id="analise-tendencias">
+                            <p>Os dados de tendências serão exibidos aqui</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-card full-width">
+                    <h3>Próximos Vencimentos</h3>
+                    <div class="report-content" id="proximos-vencimentos">
+                        <p>Nenhum vencimento próximo</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+
+        <section class="data-controls">
+            <div class="controls-header">
+                <h3><i class="fas fa-database"></i> Gerenciamento de Dados</h3>
+            </div>
+            <div class="controls-buttons">
+                <button id="exportar-excel" class="btn btn-primary">
+                    <i class="fas fa-file-excel"></i> Exportar para Excel
+                </button>
+                <button id="importar-excel" class="btn btn-secondary">
+                    <i class="fas fa-file-import"></i> Importar do Excel
+                </button>
+                <input type="file" id="arquivo-importacao-excel" accept=".xlsx,.xls" style="display: none;">
+                <button id="backup-dados" class="btn btn-info">
+                    <i class="fas fa-save"></i> Backup Completo
+                </button>
+                <button id="limpar-dados" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Limpar Todos os Dados
+                </button>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Controle Financeiro Pessoal - Vinícius Silva &copy; 2025 - Desenvolvido para organização financeira</p>
+            <p><i class="fas fa-info-circle"></i> Todos os dados são armazenados localmente no seu navegador</p>
+        </footer>
+    </div>
+
+   <!-- <script src="js/lista.scripts.js"></script> -->
+    <script src="js/script.js"></script>
+</body>
+</html>
